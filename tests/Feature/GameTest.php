@@ -39,7 +39,26 @@ class GameTest extends TestCase
 
 
         $response = $this->call('GET', '/games/create');
-        $this->assertEquals(200, $response->status());
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testStore()
+    {
+        \Session::start();
+
+        // $user = factory(User::class)->make();
+        $user = User::find(1);
+        $this->be($user);
+
+
+        $response = $this->call('POST', 'games', array(
+            '_token' => csrf_token(),
+            'name' => 'deko'
+        ));
+
+        $this->assertEquals(302, $response->getStatusCode());
+        // $this->assertEquals(302, $response->status());
+        $response->assertRedirect('games');
     }
 
 }
